@@ -8,5 +8,6 @@ router.post("/start", gameController.start);
 router.post("/invite", gameController.invite);
 router.post("/invitation", gameController.invitation);
 router.post("/startGame", gameController.startgame);
+router.post('/gamedata', gameController.gamedata);
 
 module.exports = router;

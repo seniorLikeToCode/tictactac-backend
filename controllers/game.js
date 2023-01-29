@@ -37,6 +37,15 @@ exports.startgame = async (req, res) => {
     return res.send({ turn: fetchUser.emailPlayer1 == userInfo.emailPlayer1 });
 };
 
+exports.gamedata = async (req, res) => {
+    let gameInfo = req.body
+    console.log(gameInfo);
+    let fetechGameData = await Game.findOne({
+        gameId: gameInfo.gameId
+    });
+    return res.send({ data: fetechGameData });
+}
+
 exports.invite = async (req, res) => {
     let gameInfo = req.body;
     if (
@@ -47,19 +56,23 @@ exports.invite = async (req, res) => {
         return res.send({ status: false, message: "Invalid Input" });
     }
 
-    if (!(User.findOne({ email: gameInfo.emailPlayer1 }) && User.findOne({ email: gameInfo.emailPlayer2 }))) {
+    player1data = await User.findOne({ email: gameInfo.emailPlayer1 })
+    player2data = await User.findOne({ email: gameInfo.emailPlayer2 });
+
+    if (!(player1data && player2data)) {
         return res.send({ status: false, message: "User not found" });
     }
 
     let newGame = new Game({
         emailPlayer1: gameInfo.emailPlayer1, // creator
+        player1username: player1data.username,
+        player2username: player2data.username,
         emailPlayer2: gameInfo.emailPlayer2, // invited
         state: ["", "", "", "", "", "", "", "", ""],
         gameId: Math.random().toString(26).slice(2),
-    }); 
+    });     
 
-    player1data = await User.findOne({ email: gameInfo.emailPlayer1 });
-    player2data = await User.findOne({ email: gameInfo.emailPlayer2 });
+   
 
 
     player1data.gamePlayed.push(newGame.gameId);
