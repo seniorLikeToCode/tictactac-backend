@@ -41,7 +41,7 @@ exports.register = async (req, res) => {
 };
 
 exports.login = async (req, res) => {
-  User.findOne({ username: req.body.username }, (err, data) => {
+    User.findOne({ username: req.body.username }, (err, data) => {
     if (!data)
       return res.send({
         status: false,
@@ -53,6 +53,7 @@ exports.login = async (req, res) => {
         status: true,
         popup: "none",
         message: "Successfully logged in",
+        data: data
       });
     else
       return res.send({

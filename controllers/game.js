@@ -25,8 +25,7 @@ function checkWinningConditions(state) {
 }
 
 exports.invitation = async (req, res) => {
-    let getUser = User.findOne({ email: req.body.username });
-    console.log(req.body, getUser);
+    let getUser = await User.findOne({ email: req.body.email });
     if (!getUser)
         return res.send({ status: false, message: "invitation api not working" });
     else return res.send({ status: true, data: getUser, message: "working" });
@@ -34,7 +33,7 @@ exports.invitation = async (req, res) => {
 
 exports.startgame = async (req, res) => {
     let userInfo = req.body;
-    let fetchUser = User.findOne({ gameId: userInfo.gameId });
+    let fetchUser = await User.findOne({ gameId: userInfo.gameId });
     return res.send({ turn: fetchUser.emailPlayer1 == userInfo.emailPlayer1 });
 };
 
@@ -57,7 +56,7 @@ exports.invite = async (req, res) => {
         emailPlayer2: gameInfo.emailPlayer2, // invited
         state: ["", "", "", "", "", "", "", "", ""],
         gameId: Math.random().toString(26).slice(2),
-    });
+    }); 
 
     player1data = await User.findOne({ email: gameInfo.emailPlayer1 });
     player2data = await User.findOne({ email: gameInfo.emailPlayer2 });
